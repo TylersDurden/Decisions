@@ -51,6 +51,7 @@ class CardLogic:
                 # Just doing this for now, obviously a work in progress
                 classifieds[hands_simulated] = hand_info
                 hands_simulated += 1
+                self.virtual_deck.nDealt += 1
         t1 = time.time()
         if self.DEBUG:
             print str(hands_simulated) + " Hands simulated [" +  str(t1-t0) + "s Elapsed]"
