@@ -75,15 +75,16 @@ class Card:
 
 
 def main():
-    player_one = Player.Player('Player1', 1000)
-    d = Deck()
+    # player_one = Player.Player('Player1', 1000)
+    # d = Deck()
+    #
+    # hand = d.deal_cards(5, False, True)
+    # d.count_cards(False)
+    # player_one.get_cards(hand)
+    # player_one.show_hand()
+    stats = Player.CardLogic(100, True)
 
-    hand = d.deal_cards(5, False, True)
-    d.count_cards(False)
-    player_one.get_cards(hand)
-    player_one.show_hand()
 
-    
 
 
 if __name__ == '__main__':
