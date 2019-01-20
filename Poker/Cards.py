@@ -46,6 +46,7 @@ class Deck:
                 self.nDealt += 1
         if show:
             print str(self.nDealt) + ' Cards in play'
+        return self.nDealt
 
 
 class Card:
@@ -82,7 +83,13 @@ def main():
     # d.count_cards(False)
     # player_one.get_cards(hand)
     # player_one.show_hand()
-    stats = Player.CardLogic(100, True)
+    stats = Player.CardLogic(10, True).hand_simulator()
+    flushes = 0
+    for hand in stats.keys():
+        data = stats[hand]
+        print data['RiverSuitCount']
+
+
 
 
 

@@ -28,30 +28,30 @@ class CardLogic:
     Rankings = {}
     DEBUG = True
     DEPTH = 0
-    virtual_deck = Cards.Deck
 
     def __init__(self, N, verbose):
         self.DEPTH = N
         self.DEBUG = verbose
-        self.virtual_deck = Cards.Deck()
-        self.hand_simulator()
+        self.Rankings = self.hand_simulator()
 
     def hand_simulator(self):
         classifieds = {}
         t0 = time.time()
         hands_simulated = 0
         for i in range(self.DEPTH):
-            self.virtual_deck = Cards.Deck()
-            while self.virtual_deck.nDealt < self.virtual_deck.N:
-                pocket = self.virtual_deck.deal_cards(2,False,False)
-                flop = self.virtual_deck.deal_cards(3,False,False)
-                turn = self.virtual_deck.deal_cards(1,False,False)
-                river = self.virtual_deck.deal_cards(1,False,False)
+            virtual_deck = Cards.Deck()
+            virtual_deck.initialize()
+            nDealt = 0
+            while nDealt<=45:
+                pocket = virtual_deck.deal_cards(2,False,False)
+                flop = virtual_deck.deal_cards(3,False,False)
+                turn = virtual_deck.deal_cards(1,False,False)
+                river = virtual_deck.deal_cards(1,False,False)
                 hand_info = self.evaluate(pocket,flop,turn,river)
                 # Just doing this for now, obviously a work in progress
                 classifieds[hands_simulated] = hand_info
                 hands_simulated += 1
-                self.virtual_deck.nDealt += 1
+                nDealt += 7
         t1 = time.time()
         if self.DEBUG:
             print str(hands_simulated) + " Hands simulated [" +  str(t1-t0) + "s Elapsed]"
@@ -70,8 +70,10 @@ class CardLogic:
                   'PocketSuitCount': psc,
                   'FlopSuitCount': fsc,
                   'FlopRankCount': frc,
-                  'RiverRankCount':rrc,
-                  'RiverSuitCount':rsc}
+                  'TurnSuitCount': tsc,
+                  'TurnRankCount': trc,
+                  'RiverRankCount': rrc,
+                  'RiverSuitCount': rsc}
         return counts
 
     def card_counts(self, cards):
@@ -79,4 +81,9 @@ class CardLogic:
         rank_count = {2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0,
                       8: 0, 9: 0, 10: 0, 11: 0, 12: 0,
                       13: 0, 14: 0}
+        for card in cards:
+            for element in list(str(card)):
+                if element in suit_count.keys():
+                    suit_count[element] += 1
+
         return rank_count, suit_count
