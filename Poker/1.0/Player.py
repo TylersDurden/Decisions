@@ -54,7 +54,8 @@ class CardLogic:
                 nDealt += 7
         t1 = time.time()
         if self.DEBUG:
-            print str(hands_simulated) + " Hands simulated [" +  str(t1-t0) + "s Elapsed]"
+            print str(self.DEPTH) + " Decks Total and "+str(hands_simulated) + \
+                  " Hands simulated [" + str(t1-t0) + "s Elapsed]"
         return classifieds
 
     def evaluate(self, p, f, t, r):

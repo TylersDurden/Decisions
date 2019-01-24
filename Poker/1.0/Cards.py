@@ -83,11 +83,10 @@ def main():
     # d.count_cards(False)
     # player_one.get_cards(hand)
     # player_one.show_hand()
-    stats = Player.CardLogic(10, True).hand_simulator()
-    flushes = 0
-    for hand in stats.keys():
-        data = stats[hand]
-        print data['RiverSuitCount']
+    stats_10_Deck = Player.CardLogic(10, True)
+    stats_100_Deck = Player.CardLogic(100, True)
+    stats_1K_Decks = Player.CardLogic(1000, True)
+    stats_10K_Decks = Player.CardLogic(10000, True)
 
 
 
