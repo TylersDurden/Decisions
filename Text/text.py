@@ -68,6 +68,7 @@ class Word:
     word = ''   # Probably a poor choice on variable name
     label = ''  # A Word's label is one of the following categories
     categories = ['verb', 'noun', 'adjective', 'pronoun', 'preposition']
+    synonyms = []
 
     def __init__(self, word_in):
         self.word = word_in
@@ -76,3 +77,4 @@ class Word:
     def set_label(self, category):
         if category in self.categories:
             self.label = category
+
