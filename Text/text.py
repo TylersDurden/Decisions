@@ -4,8 +4,10 @@ import numpy as np, fUtility
 class Textual:
     Characters = {}
     code_points = {}
+    verbose = False
 
-    def __init__(self):
+    def __init__(self, verbosity):
+        self.verbose = verbosity
         self.initialize()
 
     def initialize(self):
@@ -35,8 +37,9 @@ class Textual:
             ii += 1
         for symbol in self.Characters.values():
             self.code_points[symbol] = ord(symbol)
-        print "Mapped Codepoints " + str(np.array(self.code_points.values()).min()) + \
-              '-' + str(np.array(self.code_points.values()).max())
+        if self.verbose:
+            print "Mapped Codepoints " + str(np.array(self.code_points.values()).min()) + \
+                  '-' + str(np.array(self.code_points.values()).max())
 
 
 class English:
@@ -56,5 +59,20 @@ class English:
             print str(len(english_data)) + ' English words found'
         self.vocab_size = len(english_data)
 
-    def retrieve_wordlist(self):
+    def retrieve_word_bag(self):
         return fUtility.execute('cat '+self.english_data_path, False)
+
+
+class Word:
+    spelling = list()
+    word = ''   # Probably a poor choice on variable name
+    label = ''  # A Word's label is one of the following categories
+    categories = ['verb', 'noun', 'adjective', 'pronoun', 'preposition']
+
+    def __init__(self, word_in):
+        self.word = word_in
+        self.spelling = list(word_in)
+
+    def set_label(self, category):
+        if category in self.categories:
+            self.label = category
