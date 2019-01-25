@@ -11,24 +11,30 @@ def pull_sherlock_ebook():
 
 def first_pass_read(information, title):
     english = text.English(verbosity=True)
+    alphabet = text.Textual
     print 'Reading \033[1m'+title+'\033[0m [\033[32m'+str(len(information))+"\033[0m Words] "
     n_known = 0
     unknowns = 0
-    # TODO: Break word bag into words by length
-    # And then search through shortened_word_bag
     for word in information:
-        # if word.lower() in word_bag:
-        #     n_known += 1
-        # else:
-        #     unknowns += 1
         try:
+            # TODO: Need to check for special characters in word
             if word in english.vocabulary[len(word)]:
                 n_known += 1
             else:
-                unknowns += 1
+                trimmed = ''
+                for letter in list(word):
+                    if letter not in alphabet.symbols:
+                        trimmed += letter
+                if trimmed in english.vocabulary[len(trimmed)]:
+                    n_known += 1
+                else:
+                    unknowns += 1
+        except UnicodeWarning:
+            pass
         except KeyError:
             break
-
+    print str(float(n_known)/len(information)*100) + '% of Words Understood'
+    print str(float(unknowns)/len(information)*100) + '% of Words Not Understood'
     return n_known, unknowns
 
 

@@ -2,6 +2,16 @@
 It is DECIDED
 ![DECIDED!](https://github.com/TylersDurden/Decisions/blob/master/decided.gif)
 _______________________________________________________________________________
+## Text
+* Experimenting with reading text, doing spell checking, basic language 
+  processing stuff basically. 
+  
+One of the things I think can be the most fun with a topic like this, is taking
+in pretty large sets of data (an entire novel for example) and seeing how small
+changes to the code (like 6 lines or so as shown in this image) can make the 
+program significantly more powerful in achieving it's goal. 
+![improved](https://raw.githubusercontent.com/TylersDurden/Decisions/master/small_improvements.png)
+_______________________________________________________________________________
 ## Visual
 
 ### Ants

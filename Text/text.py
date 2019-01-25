@@ -6,33 +6,34 @@ class Textual:
     code_points = {}
     verbose = False
 
+    symbols = ['!', '@', '#', '$', '%', '^', '&', '*',
+                    '(', ')', '-', '_', '=', '+', '{', '[',
+                    ']', '}', "'", '"', ';', ':', '/', '?',
+                    '.', ',', '>', '<', '|', '\\']
+
+    letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+               'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+               'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
+               'y', 'z']
+    Alphas = []
+
     def __init__(self, verbosity):
         self.verbose = verbosity
         self.initialize()
 
     def initialize(self):
         # Define possible characters
-        Alphas = []
-        letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
-                   'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
-                   'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
-                   'y', 'z']
-        for let in letters:
-            Alphas.append(let.upper())
-        symbols = ['!', '@', '#', '$', '%', '^', '&', '*',
-                   '(', ')', '-', '_', '=', '+', '{', '[',
-                   ']', '}', "'", '"', ';', ':', '/', '?',
-                   '.', ',', '>', '<', '|', '\\']
-
+        for let in self.letters:
+            self.Alphas.append(let.upper())
         # Making a bag of characters
         ii = 0
-        for l in letters:
+        for l in self.letters:
             self.Characters[ii] = l
             ii += 1
-        for L in Alphas:
+        for L in self.Alphas:
             self.Characters[ii] = L
             ii += 1
-        for s in symbols:
+        for s in self.symbols:
             self.Characters[ii] = s
             ii += 1
         for symbol in self.Characters.values():
@@ -57,7 +58,7 @@ class English:
         # (* linux: /usr/share/dict *)
         english_data = fUtility.execute('cat '+self.english_data_path, False)
         if self.verbose:
-            print str(len(english_data)) + ' English words found'
+            print str(len(english_data)) + ' English words in Vocabulary'
         self.vocab_size = len(english_data)
         # Create dictionary with word length as keys
         self.sort_words(english_data)
