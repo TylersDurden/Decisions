@@ -35,6 +35,23 @@ def word_search(vocabulary, target, verbose):
     return close_ones, same_length, correct
 
 
+def simple_search(vocab, target):
+    correct = False
+    for word in vocab:
+        matches = 0
+        if len(list(word)) == len(list(target)):
+            checklist = list(target)
+            checklist.reverse()
+            for letter in list(word):
+                try:
+                    if letter == checklist.pop():
+                        matches += 1
+                except IndexError:
+                    break
+                correct = True
+    return correct
+
+
 def main():
     if '-s' in sys.argv:
         word_in = sys.argv[2]

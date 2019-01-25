@@ -9,32 +9,41 @@ def pull_sherlock_ebook():
     return sherlock.replace('\n', ' ').split(' '), sh_length
 
 
-def first_pass_read(information, title):
+def first_pass_read(information, title, verbose):
     english = text.English(verbosity=True)
-    alphabet = text.Textual
-    print 'Reading \033[1m'+title+'\033[0m [\033[32m'+str(len(information))+"\033[0m Words] "
+    symbols = text.Textual.symbols
+    if verbose:
+        print 'Reading \033[1m' + title + '\033[0m [\033[32m' + str(len(information)) + "\033[0m Words] "
     n_known = 0
     unknowns = 0
+    unknown_words = []
     for word in information:
         try:
-            # TODO: Need to check for special characters in word
             if word in english.vocabulary[len(word)]:
+                # if spell_check.simple_search(english.vocabulary[len(word)], word):
                 n_known += 1
             else:
+                # Remove any special characters attached to word
                 trimmed = ''
                 for letter in list(word):
-                    if letter not in alphabet.symbols:
+                    if letter not in symbols or letter != '\n':
                         trimmed += letter
                 if trimmed in english.vocabulary[len(trimmed)]:
                     n_known += 1
                 else:
                     unknowns += 1
+                    unknown_words.append(word)
         except UnicodeWarning:
             pass
         except KeyError:
             break
-    print str(float(n_known)/len(information)*100) + '% of Words Understood'
-    print str(float(unknowns)/len(information)*100) + '% of Words Not Understood'
+    if verbose:
+        print '\033[1m\033[33m' + str(float(n_known) / len(information) * 100) + \
+              '% of Words Understood\033[0m'
+        print '\033[1m\033[33m' + str(float(unknowns) / len(information) * 100) + \
+              '% of Words Not Understood\033[0m'
+    print unknown_words.pop(205)
+    print unknown_words.pop(210)
     return n_known, unknowns
 
 
@@ -43,7 +52,7 @@ def main():
         t0 = time.time()
         book, n_words = pull_sherlock_ebook()
         try:
-            known, unknown = first_pass_read(book, "Sherlock Holmes")
+            known, unknown = first_pass_read(book, "Sherlock Holmes", True)
         except KeyboardInterrupt:
             pass
         print '\033[1m[Finished in \033[31m'+str(time.time()-t0)+'s\033[0m]'
@@ -52,7 +61,8 @@ def main():
     else:
         t0 = time.time()
         ex_text = "This is a simple example sentence though it isn't very long"
-        known, unknown = first_pass_read(ex_text.split(' '), "example")
+        known, unknown = first_pass_read(ex_text.split(' '), "example", False)
+        print '\033[1m[Finished in \033[31m' + str(time.time() - t0) + 's\033[0m]'
         print str(known) + " Words Recognized"
         print str(unknown) + " Unknown Words Read"
 
