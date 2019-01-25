@@ -1,9 +1,8 @@
 import sys, text
 
 
-def word_search(target, verbose):
+def word_search(vocabulary, target, verbose):
     # TODO: missing words mispelled with added letters
-    vocabulary = text.English(True).retrieve_word_bag()
     close_ones = []
     same_length = []
     correct = False
@@ -20,13 +19,13 @@ def word_search(target, verbose):
                         matches += 1
                 except IndexError:
                     break
-            if matches == N:
-                print word + " is spelled correctly"
                 correct = True
             if float(matches)/len(target) >= 0.66:
                 close_ones.append(word)
             same_length.append(word)
     if verbose:
+        if matches == N:
+            print word + " is spelled correctly"
         print "Target '" + target + "' is " + str(len(list(target))) + ' letters'
         print "Found " + str(len(close_ones)) + " very similar words"
         for choice in close_ones:
@@ -39,7 +38,8 @@ def word_search(target, verbose):
 def main():
     if '-s' in sys.argv:
         word_in = sys.argv[2]
-        close,same_size,correct = word_search(word_in, False)
+        vocabulary = text.English(True).retrieve_word_bag()
+        close,same_size,correct = word_search(vocabulary,word_in, False)
         if not correct:
             print word_in + ' is probably spelled incorrectly'
             print "Were you looking for: "
@@ -47,7 +47,11 @@ def main():
                 print word
     if '-debug' in sys.argv:
         word_in = sys.argv[2]
-        word_search(word_in, True)
+        word_search(vocabulary, word_in, True)
+    if 'alt' in sys.argv:
+        vocabulary = text.English(True).retrieve_word_bag()
+        if sys.argv[2] in vocabulary:
+            print sys.argv[2]
 
 
 if __name__ == '__main__':

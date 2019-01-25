@@ -46,6 +46,7 @@ class English:
     english_data_path = '/usr/share/dict/american-english'
     vocab_size = 0
     verbose = False
+    vocabulary = {}
 
     def __init__(self, verbosity):
         self.verbose = verbosity
@@ -58,6 +59,19 @@ class English:
         if self.verbose:
             print str(len(english_data)) + ' English words found'
         self.vocab_size = len(english_data)
+        # Create dictionary with word length as keys
+        self.sort_words(english_data)
+
+    def sort_words(self, word_data):
+        longest_word = 0
+        for word in word_data:
+            if len(list(word)) > longest_word:
+                longest_word = len(word)
+        keys = np.arange(0, 50, 1)
+        for word_length in keys:
+            self.vocabulary[word_length] = list()
+        for element in word_data:
+            self.vocabulary[len(list(element))].append(element)
 
     def retrieve_word_bag(self):
         return fUtility.execute('cat '+self.english_data_path, False)
