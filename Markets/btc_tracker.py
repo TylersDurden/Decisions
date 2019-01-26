@@ -1,4 +1,4 @@
-import urllib, time, sys, fUtility, btc
+import urllib, time, sys, fUtility, btc, os
 
 
 def get_current_price():
@@ -84,31 +84,36 @@ def historic_data_dump(data, filename):
 def running_log(N, delay):
     today = time.localtime()
     date = str(today.tm_mon)+'/'+str(today.tm_yday)+'/'+str(today.tm_year)
-
+    differential = {}
     t0 = time.time()
     print "| Adding to BTC_TRACKER LOG | DATE:"+date+"|"
+    log_name = 'log'+str(today.tm_mon)+str(today.tm_yday)+str(today.tm_year)+'.txt'
     ii = 0
     data_points = {}
     while ii < N:
         try:
             top3_mkt_btc = get_current_price()
+            data_points[ii] = top3_mkt_btc.values()
+            differential[ii] = top3_mkt_btc.values().pop() - top3_mkt_btc.values().pop()
             now = str(time.time()-t0)
             print '\033[1m\033[37m'+" < MARKET PRICES >"+'\033[32m'
             for mkt in top3_mkt_btc.keys():
                 print mkt+" "+top3_mkt_btc[mkt]
+                os.system('echo "' + mkt+" "+top3_mkt_btc[mkt]+'" >> '+log_name)
+            print '\033[1m\033[38m Market Spread [Euro-USD] : '+str(differential[ii])+'\033[0m'
             print '\033[0m\033[1m '+date+' + '+now+'s\033[0m'
-            data_points[ii] = top3_mkt_btc.values()
+
             ii += 1
         except KeyboardInterrupt:
             ii = N
         time.sleep(delay)
-    return data_points
+    return data_points, differential
 
 
 def main():
     # btc_history = find_historic_data(True)
     BTC = btc.BTC()
-    BTC.load_live_data(running_log(40,20), True)
+    BTC.load_live_data(running_log(100,20), True)
     # title = 'livelog.txt'
     # historic_data_dump(data_points.values(), title)
 
