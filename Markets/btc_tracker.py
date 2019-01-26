@@ -1,4 +1,4 @@
-import urllib, time, sys, fUtility
+import urllib, time, sys, fUtility, btc
 
 
 def get_current_price():
@@ -76,14 +76,41 @@ def historic_data_dump(data, filename):
     for point in data:
         dump += point+'\n'
         data_count += 1
-    open(filename, 'w').write(dump)
+    open(filename, 'a').write(dump)
     print str(len(data)) + " Price-Points Dumped to " + filename
     return 0
 
 
+def running_log(N, delay):
+    today = time.localtime()
+    date = str(today.tm_mon)+'/'+str(today.tm_yday)+'/'+str(today.tm_year)
+
+    t0 = time.time()
+    print "| Adding to BTC_TRACKER LOG | DATE:"+date+"|"
+    ii = 0
+    data_points = {}
+    while ii < N:
+        try:
+            top3_mkt_btc = get_current_price()
+            now = str(time.time()-t0)
+            print '\033[1m\033[37m'+" < MARKET PRICES >"+'\033[32m'
+            for mkt in top3_mkt_btc.keys():
+                print mkt+" "+top3_mkt_btc[mkt]
+            print '\033[0m\033[1m '+date+' + '+now+'s\033[0m'
+            data_points[ii] = top3_mkt_btc.values()
+            ii += 1
+        except KeyboardInterrupt:
+            ii = N
+        time.sleep(delay)
+    return data_points
+
+
 def main():
-    find_historic_data()
-    top3_mkt_btc = get_current_price()
+    # btc_history = find_historic_data(True)
+    BTC = btc.BTC()
+    BTC.load_live_data(running_log(40,20), True)
+    # title = 'livelog.txt'
+    # historic_data_dump(data_points.values(), title)
 
     if '-update_history' in sys.argv:
         # Get historic data
