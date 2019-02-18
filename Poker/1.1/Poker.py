@@ -1,5 +1,5 @@
-import Cards, time
-
+import Cards, time, sys
+import numpy as np
 
 def simulate_hands(verbose, each):
     hands = {}
@@ -39,16 +39,40 @@ def simulate_50K_hands():
     return data, float(time.time()-T0)
 
 
-def main():
-    t0 = time.time()
-    simulate_hands(True,False)
-    pt1, dt1 = simulate_50K_hands()
-    pt2, dt2 = simulate_50K_hands()
-    pt3, dt3 = simulate_50K_hands()
-    pt4, dt4 = simulate_50K_hands()
-    print str(len(pt1)*len(pt1.pop(0))*7*4) +\
-          " Hands Simulated [" + str(time.time() - t0) + "]"
+def analyze_hand(hand_data):
+    stats = {}
+    for round in range(len(hand_data)):
+        pocket = hand_data[round][0].pop()
+        flop = hand_data[round][1].pop()
+        turn = hand_data[round][2].pop()
+        river = hand_data[round][3].pop()
 
+        p1 = pocket[0].split('')
+        p2 = pocket[1].split('')
+
+        f1 = flop[0].split('')
+        f2 = flop[1].split('')
+        f3 = flop[2].split('')
+
+        t1 = turn[0].split('')
+        r1 = river[0].split('')
+
+        stats[round] = []
+    return stats
+
+
+def main():
+    if '-train' in sys.argv:
+        t0 = time.time()
+        simulate_hands(True, False)
+        pt1, dt1 = simulate_50K_hands()
+        pt2, dt2 = simulate_50K_hands()
+        pt3, dt3 = simulate_50K_hands()
+        print str(len(pt1) * len(pt1.pop(0)) * 7 * 3) + " Hands Simulated [" +\
+              str(time.time() - t0) + "]"
+
+    cards = simulate_hands(True, False)
+    analyze_hand(cards)
 
 if __name__ == '__main__':
     main()
