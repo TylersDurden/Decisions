@@ -42,22 +42,30 @@ class osmosis:
         cycles = []
         for i in range(n_steps):
             ii = 0
-            next_state = np.zeros(self.dims).flatten()
+            next_state = np.array(self.cell_world +\
+                         np.random.random_integers(0, 3, self.dims[0] * self.dims[1]).reshape((self.dims))).flatten()
             edges = self.edges.flatten()
-            for cell in self.cell_world.flatten():
+            avg = np.array(ndi.convolve(self.cell_world, BLUR).flatten()).mean()
+            for cell in ndi.convolve(self.cell_world, BLUR).flatten():
                 if edges[ii] >= 0:
-                    continue
+                    next_state[ii] -= cell/n_steps
                 # # /** Use Automata like rules to convect INSIDE circle **/ # #
-                # else:
+                else:
+                    if cell % 7 == 0:
+                        next_state[ii] = 1
+                    elif cell > avg:
+                        next_state[ii] += 1
+                    else:
+                        next_state[ii] -= 1
+
 
                 ii += 1
-            cycles.append(next_state.reshape(self.dims))
+            self.cell_world = next_state.reshape(self.dims)
+            cycles.append(ndi.convolve(self.cell_world, SHARP))
         return cycles
 
 
 life = osmosis([250, 250], 100, [3, 5])
-life.show_states()
-test = life.internal_phase(1).pop()
-
-plt.imshow(test, 'gray')
-plt.show()
+# life.show_states()
+test = life.internal_phase(100)
+utility.bw_render(test, 100, True, 'grayholesun.mp4')
