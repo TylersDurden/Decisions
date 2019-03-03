@@ -1,5 +1,8 @@
-import resource, matplotlib.pyplot as plt, matplotlib.animation as animation, numpy as np
 from matplotlib.animation import FFMpegWriter
+import matplotlib.animation as animation
+import matplotlib.pyplot as plt
+import numpy as np
+import resource
 
 
 def show(matrix, name, isColor):
@@ -113,6 +116,25 @@ def draw_centered_circle(canvas, radius, show):
     return canvas
 
 
-
-
+def create_point_cloud(state_size, cloud_size, n_points, show):
+    asize = cloud_size
+    bsize = state_size
+    pad = (bsize - asize) / 2
+    blob = np.zeros((asize, asize))
+    points = {}
+    ii = 0
+    for i in range(n_points):
+        point = spawn_random_point(np.zeros((asize, asize)))
+        r = np.sqrt(((point[0] - pad) * (point[0] - pad) + (point[1] - pad) * (point[1] - pad)))
+        if r <= (asize - pad):
+            blob[point[0], point[1]] = 1
+            points[ii] = point
+        ii += 1
+    cloud = np.zeros((bsize, bsize))
+    cloud[pad:bsize-pad, pad:bsize-pad] = blob
+    # Show the cloud if flagged
+    if show:
+        plt.imshow(cloud, 'gray')
+        plt.show()
+    return cloud, points
 

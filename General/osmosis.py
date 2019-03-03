@@ -1,6 +1,6 @@
-import matplotlib.pyplot as plt, matplotlib.animation as animation
 import numpy as np, scipy.ndimage as ndi
-import os, sys, utility
+import matplotlib.pyplot as plt
+import utility
 
 SHARP = [[0,0,0],
          [0,2,0],
