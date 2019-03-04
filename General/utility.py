@@ -2,6 +2,7 @@ from matplotlib.animation import FFMpegWriter
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 import freetype as ft
+import networkx as nx
 import numpy as np
 import resource
 
@@ -190,3 +191,31 @@ def draw_text(text, mapping, show):
         plt.show()
     return state
 
+
+def bfs(graph_data, start):
+    g = nx.from_dict_of_lists(graph_data)
+    path = list()
+    queue = [start]
+    queued = list()
+    while queue:
+        vertex = queue.pop()
+        for node in graph_data[vertex]:
+            if node not in queued:
+                queued.append(node)
+                queue.append(node)
+                path.append([vertex, node])
+    return path
+
+
+def dfs(graph, start):
+    stack = [start]
+    parents = {start:start}
+    path = list()
+    while stack:
+        vertex = stack.pop(-1)
+        for node in graph[vertex]:
+            if node not in parents:
+                parents[node] = vertex
+                stack.append(node)
+        path.append([parents[vertex], vertex])
+    return path
