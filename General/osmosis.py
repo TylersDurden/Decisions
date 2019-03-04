@@ -65,7 +65,12 @@ class osmosis:
         return cycles
 
 
-life = osmosis([250, 250], 100, [3, 5])
-# life.show_states()
-test = life.internal_phase(100)
-utility.bw_render(test, 100, True, 'grayholesun.mp4')
+def main():
+    life = osmosis([250, 250], 100, [3, 5])
+    # life.show_states()
+    test = life.internal_phase(100)
+    utility.bw_render(test, 100, False, '')
+
+
+if __name__ == '__main__':
+    main()

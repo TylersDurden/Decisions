@@ -1,6 +1,7 @@
 from matplotlib.animation import FFMpegWriter
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
+import freetype as ft
 import numpy as np
 import resource
 
@@ -137,4 +138,55 @@ def create_point_cloud(state_size, cloud_size, n_points, show):
         plt.imshow(cloud, 'gray')
         plt.show()
     return cloud, points
+
+
+def create_font_mappings():
+    alpha = ['a', 'b', 'c', 'd', 'e', 'f',
+             'g', 'h', 'i', 'j', 'k', 'l',
+             'm', 'n', 'o', 'p', 'q', 'r',
+             's', 't', 'u', 'v', 'w', 'x',
+             'y', 'z']
+
+    specials = [' ', ',', '.', '!', '?',
+                ':', ';', '/', '>', '<']  # TODO: Add more
+
+    mappings = {}
+    for letter in alpha:
+        tface = ft.Face('/snap/wine-platform/58/opt/wine-staging/share/wine/fonts/arial.ttf')
+        tface.set_char_size(48 * 64)
+        tface.load_char(letter)
+        bitmap = tface.glyph.bitmap
+        mappings[letter] = np.array(bitmap.buffer).reshape(bitmap.rows, bitmap.width)
+    for letter in alpha:
+        tface = ft.Face('/snap/wine-platform/58/opt/wine-staging/share/wine/fonts/arial.ttf')
+        tface.set_char_size(48 * 64)
+        tface.load_char(letter.upper())
+        bitmap = tface.glyph.bitmap
+        mappings[letter.upper()] = np.array(bitmap.buffer).reshape(bitmap.rows, bitmap.width)
+    for character in specials:
+        tface = ft.Face('/snap/wine-platform/58/opt/wine-staging/share/wine/fonts/arial.ttf')
+        tface.set_char_size(48 * 64)
+        tface.load_char(character)
+        bitmap = tface.glyph.bitmap
+        mappings[character] = np.array(bitmap.buffer).reshape(bitmap.rows, bitmap.width)
+    print str(len(mappings.keys())) + " Characters Mapped to Font Imagery"
+    return mappings
+
+
+def draw_text(text, mapping, show):
+    pad = mapping['A'].shape
+    n_letters = len(list(text))
+    state = np.zeros((n_letters*pad[0], n_letters*pad[1]))
+    print state.shape
+    x = 0
+    for letter in list(text):
+        font_let = mapping[letter]
+        sz = font_let.shape
+        state[0:sz[0],x:x+sz[1]] = font_let
+        x += sz[1]+1
+        # TODO: Allign letters properly
+    if show:
+        plt.imshow(state, 'gray')
+        plt.show()
+    return state
 
