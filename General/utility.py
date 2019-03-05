@@ -218,4 +218,25 @@ def dfs(graph, start):
                 parents[node] = vertex
                 stack.append(node)
         path.append([parents[vertex], vertex])
-    return path
+    return path[1:]
+
+
+def show_subplots(images, shape):
+    f, ax = plt.subplots(shape[0], shape[1])
+    II = 0
+    for row in range(shape[0]):
+        for col in range(shape[1]):
+            ax[row, col].imshow(images[images.keys().pop(II)], 'gray')
+            ax[row, col].set_title((images.keys().pop(II)))
+            II += 1
+    plt.show()
+
+
+def count_n_particles(state):
+    n_alive = 0
+    n_total = np.array(state).shape[0]*np.array(state).shape[1]
+    for cell in np.array(state).flatten():
+        if cell == 1:
+            n_alive += 1
+    ratio = 100*n_alive/float(n_total)
+    return n_alive, ratio
