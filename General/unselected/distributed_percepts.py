@@ -153,7 +153,7 @@ def main():
         # Maximize swarm connectivity to lowest non-zero number
         print "\033[1m\033[35m\t\t** Optimizing Swarm Connectivity **\033[0m"
         s.optimize_swarm(is_animated=True)
-
+        print s.FireFlies.pop().connections
 
 if __name__ == '__main__':
     main()
