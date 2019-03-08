@@ -13,6 +13,11 @@ program significantly more powerful in achieving it's goal.
 ![improved](https://raw.githubusercontent.com/TylersDurden/Decisions/master/small_improvements.png)
 _______________________________________________________________________________
 ## Visual
+Genetic Walks - Improve random walks with a Genetic Algorithm approach
+where each walk is a parent/child, and the random steps are like dna to be
+mutated and inhered/selected for 
+
+![](https://raw.githubusercontent.com/TylersDurden/Decisions/Visual/Genetics/master/parameters.png)
 
 ### Ants
 * Doing some random walk, and random walk related, simulations 

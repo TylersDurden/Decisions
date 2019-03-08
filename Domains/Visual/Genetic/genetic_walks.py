@@ -139,15 +139,18 @@ class GeneticWalkers:
                 exit(0)
         while not self.solved:
             # TODO: Check if any walks reached goal
-            print len(self.paths.keys())
             for step_id in self.paths.keys():
                 if not self.check_solved(self.paths[step_id]):
                     fit = self.walker_data[step_id][0]
                     seq = self.walker_data[step_id][1]
                     walk = self.walker_data[step_id][2]
                     child = mutate(seq, walk, fit, self.mutate_factor)
+                    self.paths[step_id] = child
+                    self.walker_data[step_id] = [fit, seq, walk]
                 else:
                     print "Finished!"
+                    self.solved = True
+                    break
             # TODO: If Not, mutate each walk and repeat
             # Reset paths.keys and walker data
 
@@ -155,7 +158,6 @@ class GeneticWalkers:
     def check_solved(self, path):
         self.TOTAL_WALKS += 1
         if self.has_end:
-            print path
             for step in path:
                 if step[0] == self.defined_end[0] and step[1] == self.defined_end[1]:
                     return path
@@ -186,6 +188,7 @@ class GeneticWalkers:
             print "* End Point Defined at " + str(self.defined_end)
             print "* Using a Mutation Factor of: " + str(self.mutate_factor)
             print "* Gene Pool Size: " + str(self.n_walkers)
+            print "* Walk Length [Steps]: " + str(self.walk_size)
 
 
 def main():
@@ -193,9 +196,11 @@ def main():
     # SINGLE WALK
 
     state = np.zeros((250, 250))
-    start = [61, 73]
-    target = [58, 71]
-    n_steps = 12
+    start = [100, 120]
+    target = [121, 115]
+    R = np.sqrt((target[0]-start[0])**2 + (target[1]-start[1])**2)
+    print "TARGET IS " + str(R) + " units away"
+    n_steps = 60
 
     if '-test' in sys.argv:
         random_walk, sequence = spawn_random_walk(start, n_steps)
@@ -203,13 +208,13 @@ def main():
         evaluated = fitness(start, target, random_walk, dG, ddG, dR, ddR, state, False)
         child_walk = mutate(sequence, random_walk, evaluated, 0.5)
 
-    g = GeneticWalkers(12, n_steps, {'start':start,'stop':target,'mutation':0.5}, state.shape, True)
-
-    if g.solved:
-        print "SOLVED!!!!"
+    g = GeneticWalkers(10, n_steps, {'start':start,'stop':target,'mutation':0.2}, state.shape, True)
 
     DT = time.time()-T0
     print "FINISHED ["+str(DT)+'s Elapsed]'
+    print "Solution: "
+
+    print str(g.TOTAL_WALKS) + " Total Walks Simulated"
 
 if __name__ == '__main__':
     main()
