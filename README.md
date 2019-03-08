@@ -17,7 +17,11 @@ Genetic Walks - Improve random walks with a Genetic Algorithm approach
 where each walk is a parent/child, and the random steps are like dna to be
 mutated and inhered/selected for 
 
-![](https://raw.githubusercontent.com/TylersDurden/Decisions/Visual/Genetics/master/parameters.png)
+![Parameters](https://raw.githubusercontent.com/TylersDurden/Decisions/master/Domains/Visual/Genetic/parameters.png)
+
+The screen shot above shows how the selection of gene pool size (number of random walkers), 
+mutation rate and the distance between start/end points affects the number of solutions tried
+before finding a valid path from point A to B. 
 
 ### Ants
 * Doing some random walk, and random walk related, simulations 
