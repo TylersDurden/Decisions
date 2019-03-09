@@ -258,3 +258,9 @@ def spawn_random_walk(position, n_steps):
         random_walk.append(directions[step])
         position = directions[step]
     return random_walk, choice_pool
+
+def calculatle_rvec(pt_a, pt_b):
+    dx = pt_a[0]-pt_b[0]
+    dy = pt_a[1]-pt_a[1]
+    r = np.sqrt((dx**2)+(dy**2))
+    return r
