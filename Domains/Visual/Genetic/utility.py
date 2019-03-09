@@ -250,3 +250,18 @@ def draw_centered_box(state, sz, value, show):
         plt.imshow(state, 'gray')
         plt.show()
     return state
+
+
+def render_random_walk(steps, state, frame_rate, save, file_name):
+    film = []
+    f = plt.figure()
+    for step in steps:
+        state[step[0]-1:step[0]+1,step[1]-1:step[1]+1] = 1
+        film.append([plt.imshow(state, 'gray')])
+        state[step[0] - 1:step[0] + 1, step[1] - 1:step[1] + 1] = 0
+        state[step[0],step[1]] = 0
+    a = animation.ArtistAnimation(f, film, interval=frame_rate,blit=True,repeat_delay=900)
+    if save:
+        w = FFMpegWriter(fps=frame_rate,bitrate=1800)
+        a.save(file_name, writer=w)
+    plt.show()

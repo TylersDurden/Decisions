@@ -23,6 +23,15 @@ The screen shot above shows how the selection of gene pool size (number of rando
 mutation rate and the distance between start/end points affects the number of solutions tried
 before finding a valid path from point A to B. 
 
+Longest Walk I've tried so far was ~100 steps in displacement from [15,15] -> [84,86]. 
+Here's a snapshot of the output and a link to a video of an animation of the succesful, albeit clumsy,
+walk. 
+
+![longwalk](https://raw.githubusercontent.com/TylersDurden/Decisions/master/Domains/Visual/Genetic/longer_walk.png)
+
+
+
+
 ### Ants
 * Doing some random walk, and random walk related, simulations 
 ### Probably

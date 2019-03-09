@@ -4,6 +4,7 @@ import utility
 import time
 import sys
 
+
 def spawn_random_walk(position, n_steps):
     choice_pool = np.random.randint(1, 10, n_steps)
     random_walk = list()
@@ -70,7 +71,7 @@ def draw_walk(initial_state, start, target, walk):
 def mutate(sequence, walk, fitness, mutation_factor):
     new_walk = []
     mutate = np.random.random_integers(0, 2, int(mutation_factor*len(walk)))
-    m = np.random.randn(len(walk)) < mutation_factor
+    m = np.abs(np.random.randn(len(walk))) < mutation_factor
     ii = 0
     for step in sequence:
         try:
@@ -115,14 +116,16 @@ class GeneticWalkers:
     defined_end = []
     solved = False
     isVerbose = False
+    animate = False
     TOTAL_WALKS = 0
 
     def __init__(self, n, m, opts, dims, verbosity):
         self.isVerbose = verbosity
         self.initialize(n, m, opts, dims)
-        self.run()
 
     def run(self):
+        simulation = []
+        paths = {}
         for seed in range(self.n_walkers):
             if self.has_start and self.has_end:
                 random_walk, sequence = spawn_random_walk(self.defined_start, self.walk_size)
@@ -132,6 +135,7 @@ class GeneticWalkers:
                                   random_walk,
                                   dG,ddG,dR,ddR,
                                   self.state, False)
+                paths[seed] = random_walk
                 self.paths[seed] = random_walk
                 self.walker_data[seed] = [f, sequence, random_walk, dR, dG, ddR, ddG]
             else:
@@ -146,14 +150,12 @@ class GeneticWalkers:
                     walk = self.walker_data[step_id][2]
                     child = mutate(seq, walk, fit, self.mutate_factor)
                     self.paths[step_id] = child
-                    self.walker_data[step_id] = [fit, seq, walk]
+                    self.walker_data[step_id] = [fit, seq, child]
                 else:
                     print "Finished!"
                     self.solved = True
-                    break
-            # TODO: If Not, mutate each walk and repeat
-            # Reset paths.keys and walker data
-
+                    return self.paths[step_id], step_id
+        return simulation, step_id
 
     def check_solved(self, path):
         self.TOTAL_WALKS += 1
@@ -167,12 +169,12 @@ class GeneticWalkers:
             print "No Endpoint has been specified :("
             return []
 
-    def initialize(self,walkers,steps,args, dims):
+    def initialize(self,walkers,steps,args, state):
         self.n_walkers = walkers
         self.walk_size = steps
         if len(args.keys()) > 0:
             self.argparse(args)
-        self.state = np.zeros(dims)
+        self.state = state
 
     def argparse(self, args):
         if 'start' in args.keys():
@@ -183,12 +185,14 @@ class GeneticWalkers:
             self.has_end = True
         if 'mutation' in args.keys():
             self.mutate_factor = float(args['mutation'])
+        if 'animate' in args.keys():
+            self.animate = args['animate']
         if self.isVerbose:
-            print "* Starting Point Defined at " + str(self.defined_start)
-            print "* End Point Defined at " + str(self.defined_end)
-            print "* Using a Mutation Factor of: " + str(self.mutate_factor)
-            print "* Gene Pool Size: " + str(self.n_walkers)
-            print "* Walk Length [Steps]: " + str(self.walk_size)
+            print '\033[1m* Starting Point Defined at \033[32m' + str(self.defined_start)+'\033[0m'
+            print '\033[1m* End Point Defined at \033[36m' + str(self.defined_end)+'\033[0m'
+            print '\033[1m* Using a Mutation Factor of: \033[35m' + str(self.mutate_factor)+'\033[0m'
+            print '\033[1m* Gene Pool Size: \033[33m' + str(self.n_walkers)+'\033[0m'
+            print '\033[1m* Walk Length [Steps]: \033[93m' + str(self.walk_size)+'\033[0m'
 
 
 def main():
@@ -196,11 +200,12 @@ def main():
     # SINGLE WALK
 
     state = np.zeros((250, 250))
-    start = [100, 120]
-    target = [121, 115]
+    start = [15, 15]
+    target = [84, 86]
+    state[target[0]-1:target[0]+1,target[1]-1:target[1]+1] = 1
     R = np.sqrt((target[0]-start[0])**2 + (target[1]-start[1])**2)
-    print "TARGET IS " + str(R) + " units away"
-    n_steps = 60
+    print '\033[1m\033[31mTARGET IS ' + str(R) + ' units away\033[0m'
+    n_steps = 150
 
     if '-test' in sys.argv:
         random_walk, sequence = spawn_random_walk(start, n_steps)
@@ -208,13 +213,19 @@ def main():
         evaluated = fitness(start, target, random_walk, dG, ddG, dR, ddR, state, False)
         child_walk = mutate(sequence, random_walk, evaluated, 0.5)
 
-    g = GeneticWalkers(10, n_steps, {'start':start,'stop':target,'mutation':0.2}, state.shape, True)
+    g = GeneticWalkers(5200, n_steps, {'start':start,'stop':target,'mutation': 0.5, 'animate':True}, state, True)
+    try:
+        simulation_data, step_id = g.run()
+        # print str(len(simulation_data)) + "[simulation size]"
+        if g.animate:
+            utility.render_random_walk(simulation_data, g.state, 60, True, 'firefly.mp4')
+    except KeyboardInterrupt:
+        pass
 
     DT = time.time()-T0
-    print "FINISHED ["+str(DT)+'s Elapsed]'
-    print "Solution: "
+    print '\033[1mFINISHED ['+str(DT)+'s Elapsed]'
+    print '\033[31m'+str(g.TOTAL_WALKS) + ' Total Walks Simulated \033[0m'
 
-    print str(g.TOTAL_WALKS) + " Total Walks Simulated"
 
 if __name__ == '__main__':
     main()
