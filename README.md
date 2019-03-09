@@ -27,7 +27,7 @@ Longest Walk I've tried so far was ~100 steps in displacement from [15,15] -> [8
 Here's a snapshot of the output and a link to a video of an animation of the succesful, albeit clumsy,
 walk. 
 
-![longwalk](https://raw.githubusercontent.com/TylersDurden/Decisions/master/Domains/Visual/Genetic/longer_walk.png)
+![longwalk](https://raw.githubusercontent.com/TylersDurden/Decisions/master/Domains/Visual/Genetic/longest_walk.png)
 
 
 
