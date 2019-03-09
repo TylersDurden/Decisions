@@ -242,26 +242,19 @@ def count_n_particles(state):
     return n_alive, ratio
 
 
-def draw_centered_box(state, sz, value, show):
-    cx = np.array(state).shape[0]/2
-    cy = np.array(state).shape[1]/2
-    state[cy-sz:cy+sz, cx-sz:cx+sz] = value
-    if show:
-        plt.imshow(state, 'gray')
-        plt.show()
-    return state
-
-
-def render_random_walk(steps, state, frame_rate, save, file_name):
-    film = []
-    f = plt.figure()
-    for step in steps:
-        state[step[0]-1:step[0]+1,step[1]-1:step[1]+1] = 1
-        film.append([plt.imshow(state, 'gray')])
-        state[step[0] - 1:step[0] + 1, step[1] - 1:step[1] + 1] = 0
-        state[step[0],step[1]] = 0
-    a = animation.ArtistAnimation(f, film, interval=frame_rate,blit=True,repeat_delay=900)
-    if save:
-        w = FFMpegWriter(fps=frame_rate,bitrate=1800)
-        a.save(file_name, writer=w)
-    plt.show()
+def spawn_random_walk(position, n_steps):
+    choice_pool = np.random.randint(1, 10, n_steps)
+    random_walk = list()
+    for step in choice_pool:
+        directions = {1: [position[0]-1, position[1]-1],
+                      2: [position[0]-1, position[1]],
+                      3: [position[0]-1, position[1]+1],
+                      4: [position[0], position[1]-1],
+                      5: position,
+                      6: [position[0], position[1]+1],
+                      7: [position[0]+1, position[1]-1],
+                      8: [position[0]+1, position[1]],
+                      9: [position[0]+1, position[0]+1]}
+        random_walk.append(directions[step])
+        position = directions[step]
+    return random_walk, choice_pool
