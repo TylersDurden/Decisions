@@ -41,11 +41,11 @@ def fitness(start,stop,path, dG, ddG, dR, ddR, state, show):
     fitness = []
     ii = 0
     for step in path[2:]:
-        if ddG[ii] <= 0 and ddR[ii] <= 0:
+        if ddR[ii] >= 0:
             fitness.append(True)
-        if ddR[ii] > 0 > ddG[ii]:
+        if ddR[ii] > 0 >= ddG[ii]:
             fitness.append(True)
-        if ddR[ii] <= 0 < ddG[ii]:
+        if 0 >= ddG[ii]:
             fitness.append(True)
         else:
             fitness.append(False)
@@ -201,11 +201,11 @@ def main():
 
     state = np.zeros((250, 250))
     start = [15, 15]
-    target = [84, 86]
+    target = [184, 186]
     state[target[0]-1:target[0]+1,target[1]-1:target[1]+1] = 1
     R = np.sqrt((target[0]-start[0])**2 + (target[1]-start[1])**2)
     print '\033[1m\033[31mTARGET IS ' + str(R) + ' units away\033[0m'
-    n_steps = 150
+    n_steps = 255
 
     if '-test' in sys.argv:
         random_walk, sequence = spawn_random_walk(start, n_steps)
@@ -213,12 +213,12 @@ def main():
         evaluated = fitness(start, target, random_walk, dG, ddG, dR, ddR, state, False)
         child_walk = mutate(sequence, random_walk, evaluated, 0.5)
 
-    g = GeneticWalkers(5200, n_steps, {'start':start,'stop':target,'mutation': 0.5, 'animate':True}, state, True)
+    g = GeneticWalkers(15000, n_steps, {'start':start,'stop':target,'mutation': 0.5, 'animate':True}, state, True)
     try:
         simulation_data, step_id = g.run()
         # print str(len(simulation_data)) + "[simulation size]"
         if g.animate:
-            utility.render_random_walk(simulation_data, g.state, 60, True, 'firefly.mp4')
+            utility.render_random_walk(simulation_data, g.state, 100, True, 'firefly.mp4')
     except KeyboardInterrupt:
         pass
 

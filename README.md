@@ -29,7 +29,7 @@ walk.
 
 ![longwalk](https://raw.githubusercontent.com/TylersDurden/Decisions/master/Domains/Visual/Genetic/longest_walk.png)
 
-![firefly](https://raw.githubusercontent.com/TylersDurden/Decisions/master/Domains/Visual/Genetic/firefly.mp4)
+![firefly](https://www.youtube.com/watch?v=fgHmwojZgBo)
 
 
 ### Ants
